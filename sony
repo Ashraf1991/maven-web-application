@@ -1,0 +1,19 @@
+node{
+
+def mavenHome= tool name:"maven"
+
+stage("git"){
+git branch: 'development', credentialsId: 'cc1926e2-74f8-4b1a-9d38-f69636cf5b7f', url: 'https://github.com/Ashraf1991/maven-web-application.git'
+
+}
+stage("build"){
+sh "${mavenHome}/bin/mvn clean package"
+}
+
+stage("deploy"){
+
+sshagent(['667525b3-0455-4b45-8147-e765264fa879']) {
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war  ec2-user@15.207.115.31:/opt/apache-tomcat-9.0.50/webapps/" 
+}
+}
+}
